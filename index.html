@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sales Team CRM Prototype</title>
+  <!-- Tailwind via CDN for quick styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-100 min-h-screen p-6">
+  <h1 class="text-2xl font-bold mb-4">Sales Team CRM Prototype (Jul 1 – Aug 31, 2025)</h1>
+  <p class="text-sm text-gray-600 mb-4">This prototype visualises pre‑computed team metrics from July 1 through August 31, 2025. It does not require any file uploads and is suitable for demos and pitches.</p>
+  <div id="app">
+    <p class="text-gray-600">Loading team metrics…</p>
+  </div>
+  <script>
+  // Fetch the precomputed metrics and build the UI
+  fetch('team_metrics.json')
+    .then(response => response.json())
+    .then(data => {
+      const app = document.getElementById('app');
+      // KPI cards
+      const kpiContainer = document.createElement('div');
+      kpiContainer.className = 'grid grid-cols-2 md:grid-cols-4 gap-4 mb-6';
+      const kpis = [
+        { label: 'Total Revenue', value: data.kpis.totalRevenue.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) },
+        { label: 'Total Units', value: data.kpis.totalUnits.toLocaleString() },
+        { label: 'Top Rep (Revenue)', value: data.reps.length ? data.reps[0].rep : '—' },
+        { label: 'Top Rep (TWE)', value: data.reps.length ? data.reps.slice().sort((a,b) => b.twe - a.twe)[0].rep : '—' }
+      ];
+      kpis.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-4 bg-white rounded-xl shadow';
+        const label = document.createElement('div');
+        label.className = 'text-xs text-gray-500';
+        label.textContent = item.label;
+        const value = document.createElement('div');
+        value.className = 'text-xl font-bold';
+        value.textContent = item.value;
+        card.appendChild(label);
+        card.appendChild(value);
+        kpiContainer.appendChild(card);
+      });
+      app.innerHTML = '';
+      app.appendChild(kpiContainer);
+      // Team metrics table
+      const tableDiv = document.createElement('div');
+      tableDiv.className = 'overflow-x-auto';
+      const table = document.createElement('table');
+      table.className = 'min-w-full text-sm border';
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr class="border-b"><th class="px-2 py-1 text-left">Rep</th><th class="px-2 py-1 text-right">Revenue</th><th class="px-2 py-1 text-right">Units</th><th class="px-2 py-1 text-right">Avg Ticket</th><th class="px-2 py-1 text-right">Share</th><th class="px-2 py-1 text-right">Hours</th><th class="px-2 py-1 text-right">TWE</th></tr>';
+      table.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      data.reps.forEach(rep => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b';
+        tr.innerHTML = `
+          <td class="px-2 py-1">${rep.rep}</td>
+          <td class="px-2 py-1 text-right">${rep.revenue.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</td>
+          <td class="px-2 py-1 text-right">${rep.units.toLocaleString()}</td>
+          <td class="px-2 py-1 text-right">${rep.avg_ticket.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</td>
+          <td class="px-2 py-1 text-right">${(rep.share_of_sales_pct * 100).toFixed(2)}%</td>
+          <td class="px-2 py-1 text-right">${rep.hours_worked.toFixed(2)}</td>
+          <td class="px-2 py-1 text-right">${rep.twe.toFixed(5)}</td>`;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      tableDiv.appendChild(table);
+      app.appendChild(tableDiv);
+      // Notes section
+      if (data.notes && data.notes.length) {
+        const notesDiv = document.createElement('div');
+        notesDiv.className = 'mt-6';
+        const h2 = document.createElement('h2');
+        h2.className = 'font-semibold mb-2';
+        h2.textContent = 'Notes';
+        notesDiv.appendChild(h2);
+        const ul = document.createElement('ul');
+        ul.className = 'list-disc list-inside text-sm text-gray-600';
+        data.notes.forEach(note => {
+          const li = document.createElement('li');
+          li.textContent = note;
+          ul.appendChild(li);
+        });
+        notesDiv.appendChild(ul);
+        app.appendChild(notesDiv);
+      }
+    })
+    .catch(() => {
+      document.getElementById('app').textContent = 'Error loading metrics.';
+    });
+  </script>
+</body>
+</html>
