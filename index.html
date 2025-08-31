@@ -9,15 +9,24 @@
 </head>
 <body class="bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-100 min-h-screen p-6">
   <h1 class="text-2xl font-bold mb-4">Sales Team CRM Prototype (Jul 1 – Aug 31, 2025)</h1>
-  <p class="text-sm text-gray-600 mb-4">This prototype visualises pre‑computed team metrics from July 1 through August 31, 2025. It does not require any file uploads and is suitable for demos and pitches.</p>
+  <p class="text-sm text-gray-600 mb-4">This prototype visualises pre‑computed team metrics from July 1 through August 31, 2025. It does not require any file uploads and is suitable for demos and reviews.</p>
   <div id="app">
     <p class="text-gray-600">Loading team metrics…</p>
   </div>
   <script>
   // Fetch the precomputed metrics and build the UI
-  fetch('team_metrics.json
-    .then(response => response.json())
+  fetch('team_metrics.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      return response.json();
+    })
     .then(data => {
+      // Validate required fields
+      if (!data.kpis || !data.reps) {
+        throw new Error('Invalid data format: Missing "kpis" or "reps"');
+      }
       const app = document.getElementById('app');
       // KPI cards
       const kpiContainer = document.createElement('div');
@@ -49,7 +58,7 @@
       const table = document.createElement('table');
       table.className = 'min-w-full text-sm border';
       const thead = document.createElement('thead');
-      thead.innerHTML = '<tr class="border-b"><th class="px-2 py-1 text-left">Rep</th><th class="px-2 py-1 text-right">Revenue</th><th class="px-2 py-1 text-right">Units</th><th class="px-2 py-1 text-right">Avg Ticket</th><th class="px-2 py-1 text-right">Share</th><th class="px-2 py-1 text-right">Hours</th><th class="px-2 py-1 text-right">TWE</th></tr>';
+      thead.innerHTML = '<tr class="border-b"><th class="px-2 py-1 text-left">Rep</th><th class="px-2 py-1 text-right">Revenue</th><th class="px-2 py-1 text-right">Units</th><th class="px-2 py-1 text-right">Avg Ticket</th><th class="px-2 py-1 text-right">Share of Sales %</th><th class="px-2 py-1 text-right">Hours Worked</th><th class="px-2 py-1 text-right">TWE</th></tr>';
       table.appendChild(thead);
       const tbody = document.createElement('tbody');
       data.reps.forEach(rep => {
@@ -87,8 +96,8 @@
         app.appendChild(notesDiv);
       }
     })
-    .catch(() => {
-      document.getElementById('app').textContent = 'Error loading metrics.';
+    .catch((err) => {
+      document.getElementById('app').textContent = 'Error loading metrics: ' + err.message;
     });
   </script>
 </body>
