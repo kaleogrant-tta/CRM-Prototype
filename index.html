@@ -160,10 +160,10 @@
         // Icon
         const iconWrapper = document.createElement('div');
         iconWrapper.innerHTML = item.icon();
-        iconWrapper.className = 'text-amber-300 mb-2';
+        iconWrapper.className = 'text-white-300 mb-2';
         // Label
         const label = document.createElement('div');
-        label.className = 'text-xs uppercase tracking-wide text-amber-200';
+        label.className = 'text-xs uppercase tracking-wide text-white-200';
         label.textContent = item.label;
         // Value
         const valueEl = document.createElement('div');
@@ -194,13 +194,13 @@
       // table header
       const thead = document.createElement('thead');
       thead.innerHTML = '<tr>' +
-        '<th class="px-3 py-2 text-left font-medium text-amber-200">Rep</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-amber-200">Revenue</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-amber-200">Units</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-amber-200">Avg Ticket</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-amber-200">Sales %</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-amber-200">Hours</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-amber-200">TWE</th>' +
+        '<th class="px-3 py-2 text-left font-medium text-white-200">Rep</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-white-200">Revenue</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-white-200">Units</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-white-200">Avg Ticket</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-white-200">Sales %</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-white-200">Hours</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-white-200">TWE</th>' +
         '</tr>';
       table.appendChild(thead);
       const tbody = document.createElement('tbody');
@@ -236,7 +236,7 @@
         });
         // Create toggle button
         const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'mt-6 text-sm text-amber-300 hover:text-amber-200 underline';
+        toggleBtn.className = 'mt-6 text-sm text-white-300 hover:text-white-200 underline';
         toggleBtn.textContent = 'Show Notes';
         toggleBtn.addEventListener('click', () => {
           const hidden = notesSection.classList.toggle('hidden');
