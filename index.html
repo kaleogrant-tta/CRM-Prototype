@@ -6,7 +6,7 @@
   <title>Sales Team CRM – Starry Night Edition</title>
   <!-- Include Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Custom styles for the starry night background -->
+  <!-- Custom styles for the starry night background and animations -->
   <style>
     /* Starry night background: a fixed photo with subtle darkening to improve contrast */
     body {
@@ -25,6 +25,9 @@
       background-position: center;
       filter: brightness(0.45) saturate(1.2);
       z-index: -2;
+      /* Enable subtle vertical scroll by repeating the image and animating the background position */
+      background-repeat: repeat-y;
+      animation: scrollBackground 120s linear infinite;
     }
     /* Optional star overlay (small flickering points) */
     .star-overlay {
@@ -40,6 +43,11 @@
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; transform: scale(0.8); }
       50% { opacity: 1; transform: scale(1); }
+    }
+    /* Keyframes for scrolling the background image vertically */
+    @keyframes scrollBackground {
+      from { background-position-y: 0%; }
+      to { background-position-y: 100%; }
     }
   </style>
 </head>
@@ -57,7 +65,7 @@
     <!-- Notes toggle button and panel -->
     <div id="notesSection" class="hidden">
       <h2 class="text-lg font-semibold mb-2">Notes</h2>
-      <ul id="notesList" class="list-disc list-inside text-sm text-gray-200 space-y-1"></ul>
+      <ul id="notesList" class="list-disc list-inside text-sm text-white space-y-1"></ul>
     </div>
   </div>
   <script>
@@ -160,10 +168,10 @@
         // Icon
         const iconWrapper = document.createElement('div');
         iconWrapper.innerHTML = item.icon();
-        iconWrapper.className = 'text-white-300 mb-2';
+        iconWrapper.className = 'text-amber-300 mb-2';
         // Label
         const label = document.createElement('div');
-        label.className = 'text-xs uppercase tracking-wide text-white-200';
+        label.className = 'text-xs uppercase tracking-wide text-amber-200';
         label.textContent = item.label;
         // Value
         const valueEl = document.createElement('div');
@@ -194,20 +202,20 @@
       // table header
       const thead = document.createElement('thead');
       thead.innerHTML = '<tr>' +
-        '<th class="px-3 py-2 text-left font-medium text-white-200">Rep</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-white-200">Revenue</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-white-200">Units</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-white-200">Avg Ticket</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-white-200">Sales %</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-white-200">Hours</th>' +
-        '<th class="px-3 py-2 text-right font-medium text-white-200">TWE</th>' +
+        '<th class="px-3 py-2 text-left font-medium text-amber-200">Rep</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-amber-200">Revenue</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-amber-200">Units</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-amber-200">Avg Ticket</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-amber-200">Sales %</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-amber-200">Hours</th>' +
+        '<th class="px-3 py-2 text-right font-medium text-amber-200">TWE</th>' +
         '</tr>';
       table.appendChild(thead);
       const tbody = document.createElement('tbody');
       data.reps.forEach((rep, index) => {
         const tr = document.createElement('tr');
-        // alternating row shading with hover effect
-        tr.className = 'hover:bg-white/10 transition-colors';
+        // alternating row shading with hover effect and ensure text is legible
+        tr.className = 'hover:bg-white/10 transition-colors text-white';
         tr.innerHTML = `
           <td class="px-3 py-2 whitespace-nowrap">${rep.rep}</td>
           <td class="px-3 py-2 whitespace-nowrap text-right">${rep.revenue.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</td>
@@ -236,7 +244,7 @@
         });
         // Create toggle button
         const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'mt-6 text-sm text-white-300 hover:text-white-200 underline';
+        toggleBtn.className = 'mt-6 text-sm text-amber-300 hover:text-amber-200 underline';
         toggleBtn.textContent = 'Show Notes';
         toggleBtn.addEventListener('click', () => {
           const hidden = notesSection.classList.toggle('hidden');
